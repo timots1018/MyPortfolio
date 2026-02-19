@@ -1,631 +1,436 @@
 import { useState, useEffect, useRef } from 'react';
+import profilePic from './assets/profile-pic.jpg';
 import './Portfolio.css';
 
-// ─── DATA ─────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════════════
 
-const SKILL_CATEGORIES = [
-  {
-    label: 'Frontend',
-    icon: '◈',
-    skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'CSS / Tailwind', 'HTML5'],
-  },
-  {
-    label: 'Backend',
-    icon: '◇',
-    skills: ['Node.js', 'Express', 'Python', 'FastAPI', 'REST APIs', 'GraphQL'],
-  },
-  {
-    label: 'Database',
-    icon: '◉',
-    skills: ['PostgreSQL', 'MongoDB', 'Redis', 'Prisma', 'SQL', 'Supabase'],
-  },
-  {
-    label: 'DevOps & Tools',
-    icon: '◎',
-    skills: ['Git', 'Docker', 'AWS', 'Vercel', 'CI/CD', 'Linux'],
-  },
-];
-
-const EXTRA_TOOLS = [
-  'Agile/Scrum', 'TDD', 'Microservices', 'CI/CD',
-  'GraphQL', 'Figma', 'WebSockets', 'OAuth2', 'Jest', 'Cypress',
+const SKILLS = [
+  { category: 'Programming Languages', items: ['Java', 'Python(Basic)'] },
+  { category: 'Web Development', items: ['Node.js', 'Express', 'REST APIs', 'React.js', 'HTML/CSS/JavaScript'] },
+  { category: 'Database', items: ['MongoDB', 'MySQL'] },
+  { category: 'Testing Tools', items: ['Postman'] },
+  { category: 'Version Control', items: ['Git', 'GitHub'] },
+  { category: 'Other Tools', items: ['VSCode'] },
 ];
 
 const PROJECTS = [
   {
-    title: 'E-Commerce Platform',
-    description: 'Full-stack online store with React, Node.js & Stripe payments. Features cart management, auth, and an admin dashboard.',
-    tags: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-    liveLink: 'https://your-ecommerce.vercel.app',
-    repoLink: 'https://github.com/yourusername/ecommerce',
+    title: 'Enhancing Query Response Efficiency for SLU Enrollment through Generative AI',
+    description: 'Navibot is a virtual assistant that helps students with a smooth and faster enrollment experience by providing swift response to their queries.',
+    tags: ['Python', 'Flask', 'HTML/CSS/JavaScript', 'Gunicorn', 'JSON'],
+    liveLink: '',
+    repoLink: '',
     image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80',
-    featured: true,
   },
   {
-    title: 'Real-Time Chat App',
-    description: 'WebSocket-powered messaging platform supporting group channels, direct messages, and file sharing.',
-    tags: ['Socket.io', 'React', 'Express', 'Redis'],
-    liveLink: 'https://your-chat.vercel.app',
-    repoLink: 'https://github.com/yourusername/chat-app',
+    title: 'Centralized Web System for BIP Steadfast Ground Inc.',
+    description: 'A centralized web system that streamlines operations, enhances communication, and improves efficiency for BIP Steadfast Ground Inc.',
+    tags: ['HTML/CSS/JavaScript', 'React', 'Express', 'Node.js', 'MongoDB'],
+    liveLink: '',
+    repoLink: '',
     image: 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=600&q=80',
-    featured: true,
   },
   {
-    title: 'AI Task Manager',
-    description: 'Smart to-do application with NLP-based priority suggestions and calendar integration.',
-    tags: ['Python', 'FastAPI', 'React', 'OpenAI'],
-    liveLink: 'https://your-taskmanager.vercel.app',
-    repoLink: 'https://github.com/yourusername/ai-tasks',
+    title: 'Navibot: Enhancing Query Response Efficiency for SLU Enrollment through Generative AI (Wordpress)',
+    description: 'A website created using wordpress to showcase the project navibot.',
+    tags: ['Wordpress'],
+    liveLink: '',
+    repoLink: '',
     image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80',
-    featured: false,
-  },
-  {
-    title: 'DevOps Dashboard',
-    description: 'Monitoring tool for CI/CD pipelines, system metrics, and deployment logs with real-time alerting.',
-    tags: ['TypeScript', 'Docker', 'Grafana', 'AWS'],
-    liveLink: 'https://github.com/yourusername/devops-dashboard',
-    repoLink: 'https://github.com/yourusername/devops-dashboard',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80',
-    featured: false,
-  },
-  {
-    title: 'Portfolio CMS',
-    description: 'Headless CMS for creatives — drag-and-drop builder with instant preview and one-click publish.',
-    tags: ['Next.js', 'Prisma', 'PostgreSQL', 'Cloudinary'],
-    liveLink: 'https://your-cms.vercel.app',
-    repoLink: 'https://github.com/yourusername/portfolio-cms',
-    image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=600&q=80',
-    featured: false,
-  },
-  {
-    title: 'Crypto Tracker',
-    description: 'Live cryptocurrency dashboard with charts, watchlists, and portfolio performance analytics.',
-    tags: ['React', 'Chart.js', 'WebSocket', 'CoinGecko API'],
-    liveLink: 'https://your-crypto.vercel.app',
-    repoLink: 'https://github.com/yourusername/crypto-tracker',
-    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80',
-    featured: false,
   },
 ];
 
-const TIMELINE = [
+const EXPERIENCE = [
   {
-    year: '2024',
-    role: 'Senior Frontend Developer',
-    company: 'TechNova Inc.',
-    desc: 'Led migration from legacy jQuery codebase to React. Improved page load times by 60%.',
+    year: '2025-Present',
+    title: 'Freelance Web Developer',
+    company: '',
+    description: 'Building websites for local businesses and personal projects, utilizing modern web technologies to create responsive and user-friendly interfaces.',
   },
   {
-    year: '2022',
-    role: 'Full-Stack Developer',
-    company: 'StartupXYZ',
-    desc: 'Built MVP SaaS product from scratch; served 10k+ users within 6 months of launch.',
+    year: '2025',
+    title: 'Web Developer',
+    company: 'BIP Steadfast Ground Inc.',
+    description: 'Built a centralized web system for BIP Steadfast Ground Inc.',
   },
   {
-    year: '2020',
-    role: 'Junior Developer',
-    company: 'WebCraft Agency',
-    desc: 'Delivered 20+ client websites. Specialized in responsive design and CMS integration.',
-  },
-  {
-    year: '2019',
-    role: 'B.Sc. Computer Science',
-    company: 'State University',
-    desc: 'Graduated with honors. Thesis on distributed systems and microservice architecture.',
+    year: '2020-2025',
+    title: 'IT Student',
+    company: 'Saint Louis University',
+    description: 'Pursuing a Bachelor of Science in Information Technology with a focus on software development. Graduated with honor(cum laude) in 2025.',
   },
 ];
 
-const CONTACT_LINKS = [
-  { icon: '📧', label: 'EMAIL',     value: 'timothyangway@email.com',          href: 'mailto:timothyangway@email.com' },
-  { icon: '🔗', label: 'LINKEDIN',  value: 'linkedin.com/in/timothyangway',    href: 'https://linkedin.com/in/timothyangway' },
-  { icon: '🐙', label: 'GITHUB',    value: 'github.com/timothyangway',         href: 'https://github.com/timothyangway' },
-  { icon: '🌐', label: 'PORTFOLIO', value: 'timothyangway.vercel.app',          href: 'https://timothyangway.vercel.app' },
-];
+// ═══════════════════════════════════════════════════════════════════════════════
+// HOOKS
+// ══════════╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝═╝─
 
-const STATS = [
-  { num: '5+',   label: 'Years Exp' },
-  { num: '40+',  label: 'Projects' },
-  { num: '20+',  label: 'Clients' },
-  { num: '100%', label: 'Committed' },
-];
-
-const NAV_LINKS = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
-
-// ─── HOOK ─────────────────────────────────────────────────────────────────────
-
-function useInView(threshold = 0.12) {
+function useScrollFade() {
   const ref = useRef(null);
-  const [inView, setInView] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true);
+      },
+      { threshold: 0.1 }
     );
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
   }, []);
 
-  return [ref, inView];
+  return [ref, isVisible];
 }
 
-// ─── SHARED: SECTION WRAPPER ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPONENTS
+// ═══════════════════════════════════════════════════════════════════════════════
 
-function Section({ id, children, className = '' }) {
-  const [ref, inView] = useInView();
+// ─── Hero Section ────────────────────────────────────────────────────────────
+function Hero({ onNavigate }) {
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  const roles = ['Web Developer'];
+
+  useEffect(() => {
+    const handleType = () => {
+      const current = loopNum % roles.length;
+      const fullText = roles[current];
+
+      setText(
+        isDeleting
+          ? fullText.substring(0, text.length - 1)
+          : fullText.substring(0, text.length + 1)
+      );
+
+      setTypingSpeed(isDeleting ? 50 : 150);
+
+      if (!isDeleting && text === fullText) {
+        setTimeout(() => setIsDeleting(true), 1500);
+      } else if (isDeleting && text === '') {
+        setIsDeleting(false);
+        setLoopNum(loopNum + 1);
+      }
+    };
+
+    const timer = setTimeout(handleType, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, loopNum, typingSpeed]);
+
   return (
-    <section
-      id={id}
-      ref={ref}
-      className={`portfolio-section ${inView ? 'section-visible' : 'section-hidden'} ${className}`}
-      aria-label={id}
-    >
-      {children}
+    <section id="home" className="hero">
+      <div className="container">
+        <div className="hero-content">
+          <p className="hero-greeting">Hi, my name is</p>
+          <h1 className="hero-name">Timothy Jue G. Angway</h1>
+          <h2 className="hero-title">
+            I'm a <span className="typewriter">{text}</span>
+            <span className="cursor">|</span>
+          </h2>
+          <p className="hero-description">
+            I build exceptional digital experiences. Specializing in creating responsive,
+            user-friendly web applications with modern technologies.
+          </p>
+          <div className="hero-buttons">
+            <button className="btn btn-primary" onClick={() => onNavigate('projects')}>
+              View My Work
+            </button>
+            <button className="btn btn-secondary" onClick={() => onNavigate('contact')}>
+              Get In Touch
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
 
-// ─── SHARED: SECTION LABEL ────────────────────────────────────────────────────
-
-function SectionLabel({ num, text }) {
-  return (
-    <div className="section-label">
-      {num && <span className="section-num">{num} —</span>} {text}
-    </div>
-  );
-}
-
-// ─── HOME ─────────────────────────────────────────────────────────────────────
-
-function Home({ onNav }) {
-  const [typed, setTyped]     = useState('');
-  const [roleIdx, setRoleIdx] = useState(0);
-  const [charIdx, setCharIdx] = useState(0);
-  const [deleting, setDeleting] = useState(false);
-
-  const roles = ['Web Developer', 'Software Engineer', 'Full-Stack Builder', 'UI Craftsman'];
-
-  useEffect(() => {
-    const current = roles[roleIdx];
-    const timeout = setTimeout(() => {
-      if (!deleting) {
-        setTyped(current.slice(0, charIdx + 1));
-        if (charIdx + 1 === current.length) setTimeout(() => setDeleting(true), 1800);
-        else setCharIdx(c => c + 1);
-      } else {
-        setTyped(current.slice(0, charIdx - 1));
-        if (charIdx - 1 === 0) {
-          setDeleting(false);
-          setCharIdx(0);
-          setRoleIdx(r => (r + 1) % roles.length);
-        } else {
-          setCharIdx(c => c - 1);
-        }
-      }
-    }, deleting ? 60 : 100);
-    return () => clearTimeout(timeout);
-  }, [typed, charIdx, deleting, roleIdx]);
-
-  return (
-    <div id="home" className="home-section">
-      {/* Background grid + orbs */}
-      <div className="home-grid-bg" />
-      <div className="home-orb home-orb-1" />
-      <div className="home-orb home-orb-2" />
-
-      {/* Hero content */}
-      <div className="home-content">
-        <div className="home-badge">▸ AVAILABLE FOR HIRE</div>
-
-        <h1 className="home-name">
-          TIMOTHY<br />
-          <span className="home-name-accent">ANGWAY</span>
-        </h1>
-
-        <div className="home-typewriter">
-          {typed}
-          <span className="home-cursor">|</span>
-        </div>
-
-        <p className="home-desc">
-          I craft performant, scalable web applications that balance clean architecture
-          with delightful user experiences. Passionate about turning complex problems
-          into elegant solutions.
-        </p>
-
-        <div className="home-ctas">
-          <button className="btn-primary" onClick={() => onNav('projects')}>
-            VIEW PROJECTS
-          </button>
-          <button className="btn-outline" onClick={() => onNav('contact')}>
-            GET IN TOUCH
-          </button>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="home-stats">
-        {STATS.map((s, i) => (
-          <div className="home-stat" key={i}>
-            <span className="home-stat-num">{s.num}</span>
-            <span className="home-stat-label">{s.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── ABOUT ────────────────────────────────────────────────────────────────────
-
+// ─── About Section ───────────────────────────────────────────────────────────
 function About() {
+  const [ref, isVisible] = useScrollFade();
+
   return (
-    <Section id="about" className="about-section">
-      <div className="about-inner">
-
-        {/* Left: text */}
-        <div className="about-text">
-          <SectionLabel num="01" text="ABOUT ME" />
-          <h2 className="section-heading">
-            BUILDING THE WEB,<br />
-            <span className="accent">ONE LINE AT A TIME</span>
-          </h2>
-          <p className="about-para">
-            I'm <strong>Timothy Jue G. Angway</strong>, a full-stack developer who genuinely
-            loves the craft. From architecting databases to polishing pixel-perfect UIs,
-            I care about every layer of the stack.
-          </p>
-          <p className="about-para">
-            When I'm not pushing code, I'm exploring open-source projects, mentoring
-            junior developers, or experimenting with new frameworks to stay ahead of
-            the curve.
-          </p>
-          <div className="about-links">
-            {['GitHub', 'LinkedIn', 'Twitter', 'Resume'].map(s => (
-              <a key={s} href="#" className="about-link">{s}</a>
-            ))}
+    <section id="about" className="about" ref={ref}>
+      <div className={`container fade-in ${isVisible ? 'visible' : ''}`}>
+        <h2 className="section-title">About Me</h2>
+        <div className="about-content">
+          <div className="about-text">
+            <p>
+              Hello! I'm Timothy, a passionate web developer.
+              I enjoy creating things that live on the internet, whether that be websites,
+              applications, or anything in between.
+            </p>
+            <p>
+              My interest in web development started back in 2019 when I decided to
+              try building my first website — turns out, I loved it!.
+            </p>
+            <p>
+              I'm passionate about writing clean, efficient code and creating seamless
+              user experiences.
+            </p>
+          </div>
+          <div className="about-image">
+            <div className="image-wrapper">
+              <img src={profilePic} alt="Timothy Angway" />
+            </div>
           </div>
         </div>
-
-        {/* Right: avatar */}
-        <div className="about-avatar-wrap">
-          <div className="about-avatar">
-            <span className="about-avatar-initials">TJA</span>
-            <div className="about-avatar-overlay" />
-            <div className="about-avatar-bar" />
-          </div>
-          <div className="about-ring about-ring-sm" />
-          <div className="about-ring about-ring-lg" />
-        </div>
-
       </div>
-    </Section>
+    </section>
   );
 }
 
-// ─── SKILL CARD ───────────────────────────────────────────────────────────────
-
-function SkillCard({ category, delay }) {
-  const [ref, inView] = useInView();
-  return (
-    <div
-      ref={ref}
-      className={`skill-card ${inView ? 'card-visible' : 'card-hidden'}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      <div className="skill-card-head">
-        <span className="skill-card-icon">{category.icon}</span>
-        <span className="skill-card-label">{category.label}</span>
-      </div>
-      <div className="skill-tags">
-        {category.skills.map(skill => (
-          <span key={skill} className="skill-tag">{skill}</span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── SKILLS ───────────────────────────────────────────────────────────────────
-
+// ─── Skills Section ──────────────────────────────────────────────────────────
 function Skills() {
-  return (
-    <Section id="skills" className="skills-section">
-      <div className="section-inner">
-        <SectionLabel num="02" text="SKILLS" />
-        <h2 className="section-heading">
-          TECHNICAL <span className="accent">ARSENAL</span>
-        </h2>
-        <p className="section-sub">Technologies I work with day-to-day</p>
+  const [ref, isVisible] = useScrollFade();
 
+  return (
+    <section id="skills" className="skills" ref={ref}>
+      <div className={`container fade-in ${isVisible ? 'visible' : ''}`}>
+        <h2 className="section-title">Skills & Technologies</h2>
         <div className="skills-grid">
-          {SKILL_CATEGORIES.map((cat, i) => (
-            <SkillCard key={cat.label} category={cat} delay={i * 100} />
-          ))}
-        </div>
-
-        <div className="skills-extra">
-          <div className="skills-extra-label">ALSO FAMILIAR WITH</div>
-          <div className="skills-extra-tags">
-            {EXTRA_TOOLS.map(tool => (
-              <span key={tool} className="extra-tag">{tool}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-// ─── PROJECT CARD ─────────────────────────────────────────────────────────────
-
-function ProjectCard({ project, index }) {
-  const [ref, inView] = useInView();
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      ref={ref}
-      className={`project-card ${inView ? 'card-visible' : 'card-hidden'} ${hovered ? 'project-card-hovered' : ''}`}
-      style={{ transitionDelay: `${index * 80}ms` }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Top glow bar on hover */}
-      <div className={`project-glow-bar ${hovered ? 'glow-bar-visible' : ''}`} />
-
-      {/* Image */}
-      <div className="project-img-wrap">
-        <img
-          src={project.image}
-          alt={project.title}
-          className={`project-img ${hovered ? 'project-img-hovered' : ''}`}
-        />
-        <div className={`project-img-overlay ${hovered ? 'overlay-hovered' : ''}`} />
-
-        {project.featured && (
-          <span className="project-featured-badge">FEATURED</span>
-        )}
-
-        {/* Hover action buttons */}
-        <div className={`project-hover-actions ${hovered ? 'actions-visible' : ''}`}>
-          <a href={project.liveLink} target="_blank" rel="noopener noreferrer"
-            className="project-btn-live" onClick={e => e.stopPropagation()}>
-            ▶ LIVE
-          </a>
-          <a href={project.repoLink} target="_blank" rel="noopener noreferrer"
-            className="project-btn-code" onClick={e => e.stopPropagation()}>
-            ⌥ CODE
-          </a>
-        </div>
-      </div>
-
-      {/* Body */}
-      <div className="project-body">
-        <h3 className="project-title">{project.title}</h3>
-        <p className="project-desc">{project.description}</p>
-
-        <div className="project-tags">
-          {project.tags.map(tag => (
-            <span key={tag} className="project-tag">{tag}</span>
-          ))}
-        </div>
-
-        <div className="project-links">
-          <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="project-link-live">
-            ↗ View Live
-          </a>
-          <a href={project.repoLink} target="_blank" rel="noopener noreferrer" className="project-link-repo">
-            ⌥ GitHub
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── PROJECTS ─────────────────────────────────────────────────────────────────
-
-function Projects() {
-  return (
-    <Section id="projects" className="projects-section">
-      <div className="section-inner">
-        <SectionLabel num="03" text="PROJECTS" />
-        <h2 className="section-heading">
-          SELECTED <span className="accent">WORK</span>
-        </h2>
-        <p className="section-sub">Hover a card to reveal live &amp; code links ↗</p>
-
-        <div className="projects-grid">
-          {PROJECTS.map((project, i) => (
-            <ProjectCard key={project.title} project={project} index={i} />
-          ))}
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-// ─── EXPERIENCE ───────────────────────────────────────────────────────────────
-
-function Experience() {
-  return (
-    <Section id="experience" className="experience-section">
-      <div className="section-inner experience-inner">
-        <SectionLabel num="04" text="EXPERIENCE" />
-        <h2 className="section-heading">
-          CAREER <span className="accent">TIMELINE</span>
-        </h2>
-
-        <div className="timeline">
-          <div className="timeline-line" />
-          {TIMELINE.map((item, i) => (
-            <div className="timeline-item" key={i}>
-              <div className="timeline-year">{item.year}</div>
-              <div className="timeline-dot" />
-              <div className="timeline-body">
-                <div className="timeline-role">{item.role}</div>
-                <div className="timeline-company">{item.company}</div>
-                <p className="timeline-desc">{item.desc}</p>
+          {SKILLS.map((skillGroup, index) => (
+            <div key={index} className="skill-category">
+              <h3>{skillGroup.category}</h3>
+              <div className="skill-tags">
+                {skillGroup.items.map((skill, i) => (
+                  <span key={i} className="skill-tag">
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
           ))}
         </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
-// ─── CONTACT ──────────────────────────────────────────────────────────────────
+// ─── Projects Section ────────────────────────────────────────────────────────
+function Projects() {
+  const [ref, isVisible] = useScrollFade();
 
-function Contact() {
   return (
-    <Section id="contact" className="contact-section">
-      <div className="section-inner contact-inner">
-        <SectionLabel num="05" text="CONTACT" />
-        <h2 className="section-heading">
-          REACH <span className="accent">OUT</span>
-        </h2>
-        <p className="contact-desc">
-          I'm open to new opportunities, freelance projects, and interesting collaborations.
-          The best way to reach me is directly via email or through any of the platforms below.
-        </p>
-
-        <div className="contact-list">
-          {CONTACT_LINKS.map(({ icon, label, value, href }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              className="contact-item">
-              <span className="contact-item-icon">{icon}</span>
-              <div className="contact-item-text">
-                <span className="contact-item-label">{label}</span>
-                <span className="contact-item-value">{value}</span>
-              </div>
-              <span className="contact-item-arrow">↗</span>
-            </a>
+    <section id="projects" className="projects" ref={ref}>
+      <div className={`container fade-in ${isVisible ? 'visible' : ''}`}>
+        <h2 className="section-title">Featured Projects</h2>
+        <div className="projects-grid">
+          {PROJECTS.map((project, index) => (
+            <ProjectCard key={index} project={project} />
           ))}
         </div>
-
-        <div className="availability-badge">
-          <span className="availability-dot" />
-          <span className="availability-text">AVAILABLE FOR NEW OPPORTUNITIES</span>
-        </div>
       </div>
-    </Section>
+    </section>
   );
 }
 
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
+function ProjectCard({ project }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className="project-card"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="project-image">
+        <img src={project.image} alt={project.title} />
+        <div className={`project-overlay ${isHovered ? 'visible' : ''}`}>
+          <div className="project-links">
+            <a
+              href={project.liveLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-link"
+            >
+              View Live
+            </a>
+            <a
+              href={project.repoLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-link"
+            >
+              Source Code
+            </a>
+          </div>
+        </div>
+      </div>
+      <div className="project-info">
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+        <div className="project-tags">
+          {project.tags.map((tag, i) => (
+            <span key={i} className="tag">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Experience Section ──────────────────────────────────────────────────────
+function Experience() {
+  const [ref, isVisible] = useScrollFade();
+
+  return (
+    <section id="experience" className="experience" ref={ref}>
+      <div className={`container fade-in ${isVisible ? 'visible' : ''}`}>
+        <h2 className="section-title">Career Journey</h2>
+        <div className="timeline">
+          {EXPERIENCE.map((job, index) => (
+            <div key={index} className="timeline-item">
+              <div className="timeline-year">{job.year}</div>
+              <div className="timeline-content">
+                <h3>{job.title}</h3>
+                <h4>{job.company}</h4>
+                <p>{job.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Contact Section ─────────────────────────────────────────────────────────
+function Contact() {
+  const [ref, isVisible] = useScrollFade();
+
+  return (
+    <section id="contact" className="contact" ref={ref}>
+      <div className={`container fade-in ${isVisible ? 'visible' : ''}`}>
+        <h2 className="section-title">Get In Touch</h2>
+        <div className="contact-content">
+          <p className="contact-description">
+            I'm currently open to new opportunities and interesting projects.
+            Whether you have a question or just want to say hi, feel free to reach out!
+          </p>
+          <div className="contact-links">
+            <a href="mailto:timothyangway@email.com" className="contact-link">
+              <span className="icon">✉️</span>
+              <span>timothyangway@email.com</span>
+            </a>
+            <a
+              href="https://github.com/timothyangway"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-link"
+            >
+              <span className="icon">💻</span>
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://linkedin.com/in/timothyangway"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-link"
+            >
+              <span className="icon">💼</span>
+              <span>LinkedIn</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
-  const [scrolled,      setScrolled]      = useState(false);
-  const [menuOpen,      setMenuOpen]      = useState(false);
-  const [cursorPos,     setCursorPos]     = useState({ x: -200, y: -200 });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Track nav scroll state
+  // Track active section on scroll
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+      const scrollPosition = window.scrollY + 100;
 
-  // Cursor glow tracker
-  useEffect(() => {
-    const onMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
-  }, []);
-
-  // Active section tracker
-  useEffect(() => {
-    const onScroll = () => {
-      for (const id of NAV_LINKS) {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 120 && rect.bottom >= 120) {
-            setActiveSection(id);
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
             break;
           }
         }
       }
     };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (section) => {
-    setMenuOpen(false);
-    const element = document.getElementById(section);
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setIsMenuOpen(false);
     }
   };
 
+  const navLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'contact', label: 'Contact' },
+  ];
+
   return (
-    <div className="portfolio-root">
-
-      {/* Cursor glow */}
-      <div
-        className="cursor-glow"
-        style={{ left: cursorPos.x - 150, top: cursorPos.y - 150 }}
-      />
-
-      {/* Scan line */}
-      <div className="scan-line" />
-
-      {/* ── HEADER ── */}
-      <header className={`portfolio-header ${scrolled ? 'header-scrolled' : ''}`}>
-        <div className="header-inner">
-
-          <button className="logo-btn" onClick={() => scrollToSection('home')} aria-label="Go to home">
-            <span className="logo-mark">&lt;TJA/&gt;</span>
+    <div className="portfolio">
+      {/* Navigation */}
+      <nav className="navbar">
+        <div className="nav-container">
+          <button className="nav-logo" onClick={() => scrollToSection('home')}>
+            TJA
           </button>
-
-          <nav className="main-nav" aria-label="Main navigation">
-            <ul role="list">
-              {NAV_LINKS.map(id => (
-                <li key={id}>
-                  <button
-                    className={`nav-link ${activeSection === id ? 'nav-link-active' : ''}`}
-                    onClick={() => scrollToSection(id)}
-                    aria-current={activeSection === id ? 'page' : undefined}
-                  >
-                    {id.toUpperCase()}
-                    {activeSection === id && <span className="nav-indicator" aria-hidden="true" />}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
 
           <button
-            className={`hamburger ${menuOpen ? 'hamburger-open' : ''}`}
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
+            className={`nav-toggle ${isMenuOpen ? 'active' : ''}`}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
-            <span /><span /><span />
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
-        </div>
 
-        {/* Mobile nav */}
-        <div className={`mobile-nav ${menuOpen ? 'mobile-nav-open' : ''}`}>
-          {NAV_LINKS.map(id => (
-            <button
-              key={id}
-              className={`mobile-nav-link ${activeSection === id ? 'mobile-nav-active' : ''}`}
-              onClick={() => scrollToSection(id)}
-            >
-              {id.toUpperCase()}
-            </button>
-          ))}
+          <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
+            {navLinks.map((link) => (
+              <li key={link.id}>
+                <button
+                  className={`nav-link ${activeSection === link.id ? 'active' : ''}`}
+                  onClick={() => scrollToSection(link.id)}
+                >
+                  {link.label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-      </header>
+      </nav>
 
-      {/* ── MAIN CONTENT ── */}
-      <main className="content-area">
-        <Home onNav={scrollToSection} />
+      {/* Main Content */}
+      <main>
+        <Hero onNavigate={scrollToSection} />
         <About />
         <Skills />
         <Projects />
@@ -633,22 +438,12 @@ function Portfolio() {
         <Contact />
       </main>
 
-      {/* ── FOOTER ── */}
-      <footer className="portfolio-footer">
-        <div className="footer-inner">
-          <span className="footer-brand">&lt;TJA/&gt;</span>
-          <span className="footer-copy">
-            © {new Date().getFullYear()} Timothy Jue G. Angway — Built with React + Passion
-          </span>
-          <button
-            className="footer-top-btn"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            ↑ TOP
-          </button>
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <p>© {new Date().getFullYear()} Timothy Jue G. Angway. Built with React.</p>
         </div>
       </footer>
-
     </div>
   );
 }
