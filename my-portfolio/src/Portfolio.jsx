@@ -51,7 +51,7 @@ const EXPERIENCE = [
   },
   {
     year: '2025',
-    title: 'Web Developer',
+    title: 'Web Developer Intern',
     company: 'BIP Steadfast Ground Inc.',
     description: 'Built a centralized web system for BIP Steadfast Ground Inc.',
   },
